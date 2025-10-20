@@ -1,4 +1,4 @@
-FROM node:12.22
+FROM --platform=linux/amd64 node:12.22
 MAINTAINER massimo@it20.info
 
 WORKDIR /
@@ -48,4 +48,3 @@ COPY --from=0 /clarity-seed/src/test/dist /clarity-seed/test/dist
 COPY --from=0 /clarity-seed/src/dev/dist /clarity-seed/dev/dist
 
 CMD ["./startup.sh"]
-
