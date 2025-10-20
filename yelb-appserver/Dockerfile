@@ -1,4 +1,4 @@
-FROM bitnami/ruby:2.7.4
+FROM bitnamilegacy/ruby:2.7.4
 MAINTAINER massimo@it20.info
 
 ################## BEGIN INSTALLATION ######################
@@ -17,12 +17,16 @@ ENV RACK_ENV=production
 RUN gem install sinatra --no-document
 RUN gem install redis --no-document
 ### hack to allow the setup of the pg gem (which would fail otherwise)
-RUN apt-get update
+RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.debian.org|http://archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/stretch-updates/d' /etc/apt/sources.list && \
+    apt-get update
 RUN apt-get install libpq-dev -y
+
 ### end of hack (this would require additional research and optimization)
-RUN gem install pg --no-document
+RUN gem install pg --platform ruby --no-document
 ### this installs the AWS SDK for DynamoDB (so that appserver can talk to DDB Vs the default Postgres/Redis)
-RUN gem install aws-sdk-dynamodb pg --no-document
+RUN gem install aws-sdk-dynamodb --no-document
 # Set the working directory to /
 WORKDIR /
 ADD startup.sh startup.sh
@@ -38,5 +42,3 @@ RUN gem install aws_lambda_ric
 ##################### INSTALLATION END #####################
 
 CMD ["./startup.sh"]
-
-
