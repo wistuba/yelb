@@ -1,0 +1,27 @@
+schemaVersion: 2.2.0
+metadata:
+  name: yelb-db
+  version: 1.0.0
+  displayName: Yelb Database
+  description: Development environment for Yelb Database
+components:
+  - name: yelb-db
+    container:
+      image: mreferre/yelb-db:0.6
+      memoryLimit: 512Mi
+      endpoints:
+        - name: postgres
+          targetPort: 5432
+          exposure: public
+      volumeMounts:
+        - name: db-data
+          path: /var/lib/postgresql/data
+  - name: db-data
+    volume:
+      size: 1Gi
+commands:
+  - id: run
+    exec:
+      component: yelb-db
+      commandLine: postgres
+      workingDir: /

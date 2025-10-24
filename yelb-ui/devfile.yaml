@@ -1,0 +1,24 @@
+schemaVersion: 2.2.0
+metadata:
+  name: yelb-ui
+  version: 1.0.0
+  displayName: Yelb UI
+  description: Development environment for Yelb UI
+components:
+  - name: yelb-ui
+    container:
+      image: mreferre/yelb-ui:0.10
+      memoryLimit: 512Mi
+      endpoints:
+        - name: ui
+          targetPort: 80
+          exposure: public
+      env:
+        - name: UI_ENV
+          value: dev
+commands:
+  - id: run
+    exec:
+      component: yelb-ui
+      commandLine: 'nginx -g "daemon off;"'
+      workingDir: /

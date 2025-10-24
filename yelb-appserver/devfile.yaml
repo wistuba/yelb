@@ -1,0 +1,30 @@
+schemaVersion: 2.2.0
+metadata:
+  name: yelb-appserver
+  version: 1.0.0
+  displayName: Yelb Application Server
+  description: Development environment for Yelb Application Server
+components:
+  - name: yelb-appserver
+    container:
+      image: mreferre/yelb-appserver:0.7
+      memoryLimit: 512Mi
+      endpoints:
+        - name: api
+          targetPort: 4567
+          exposure: public
+      env:
+        - name: RACK_ENV
+          value: development
+      volumeMounts:
+        - name: app-source
+          path: /app
+  - name: app-source
+    volume:
+      size: 1Gi
+commands:
+  - id: run
+    exec:
+      component: yelb-appserver
+      commandLine: ruby /app/yelb-appserver.rb
+      workingDir: /app
